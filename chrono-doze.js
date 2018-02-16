@@ -33,7 +33,7 @@
                        weekday: "", 
                        totalhours: 0, 
                        date: "0101-01-01", 
-                       color: "rgb(192, 192, 192)"}
+                       color: "rgb(232, 232, 232)"}
     
   var time = timeParse("02. 07. 2017 13:51");
   var dayratio = function(time) {
