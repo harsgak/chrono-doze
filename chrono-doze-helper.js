@@ -32,6 +32,7 @@ var groupByDate=function(allnapsdata, f) {
         dailyhours=dailyhours+parseFloat(nap.hours);
       }
       days[date].totalhours=dailyhours
+      days[date].date=date
   }
   return days
 }
@@ -146,23 +147,24 @@ var colorMyDays=function(days){
     palegray:"rgb(192, 192, 192)"
   }
   for (var date in days ){
+  	var dcolor, ncolor
   	var dquality=dayQuality(days[date])
     switch(dquality.interpret) {
         case -1:
-            var dcolor=chronodoze_color['palered']
-            var ncolor=chronodoze_color['red']
+            dcolor=chronodoze_color['palered']
+            ncolor=chronodoze_color['red']
             break;
         case 0:
-            var dcolor=chronodoze_color['palegreen']
-            var ncolor=chronodoze_color['green']
+            dcolor=chronodoze_color['palegreen']
+            ncolor=chronodoze_color['green']
             break;
         case 1:
-            var dcolor=chronodoze_color['paleblue']
-            var ncolor=chronodoze_color['blue']
+            dcolor=chronodoze_color['paleblue']
+            ncolor=chronodoze_color['blue']
             break;
         default:
-            var dcolor=chronodoze_color['palegray']
-            var ncolor=chronodoze_color['gray']
+            dcolor=chronodoze_color['palegray']
+            ncolor=chronodoze_color['gray']
     }
     days[date].color=dcolor
     days[date].naps.forEach( function(nap) {nap.color=ncolor});
