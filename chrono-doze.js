@@ -117,6 +117,8 @@
   //createCircle(svg,180,200,  {weekday:'Thu',naps:[{start:"23:23", end:"09:47", color:'#2020FF'}] ,quality:"blue", color:'#C0C0FF'}); 
   console.log(weekdata);
   create7Circle(svg, 64,256,0.2,weekdata);
+  console.log("AllData")
+  console.log(allnapsdata)
   
   
   
