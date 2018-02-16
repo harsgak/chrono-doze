@@ -36,17 +36,16 @@
                        color: "rgb(232, 232, 232)"}
     
   var time = timeParse("02. 07. 2017 13:51");
-  var dayratio = function(time) {
-      // Returns value in (-0.5,0.5)
-  		var unbalanced =  ((time.getHours()*60 + time.getMinutes()) / (24*60)) 
-      if ( unbalanced<0.5 ) {
-      		balanced = unbalanced;
-      } else {
-      		balanced = -(1-unbalanced);
-      }
-      return balanced;
-  };
-  console.log(dayratio(time));
+  var nap2angles=function(nap, daydata){
+  	var t1=timeParse(nap.start);
+    var t2=timeParse(nap.end);
+    var t1r=(t1.getHours()*60 + t1.getMinutes()) / (24*60)
+    var t2r=(t2.getHours()*60 + t2.getMinutes()) / (24*60)
+    if (t1r>t2r) {t1r=t1r-1}
+    return {start:t1r*2*Math.PI, end:t2r*2*Math.PI} 
+    
+  }
+  console.log(nap2angles({"id": "1518209146430", "start": "10. 02. 2018 2:15", "end": "10. 02. 2018 9:15", "hours": "7.000"}))
   
   var createCircle=function(svg,innerRadius,outerRadius,circledata){
   			
@@ -66,10 +65,11 @@
                 .cornerRadius(5);
 
         var addpathForeground=function(nap) {
+        		var angles=nap2angles(nap)
         		svg.append('path')
                 .datum({
-                		startAngle:dayratio(timeParse(nap.start))*(2*Math.PI),
-                    endAngle:dayratio(timeParse(nap.end))*(2*Math.PI)
+                		startAngle:angles.start,
+                    endAngle:angles.end
                 })
                 .attr({d:arcForeground})
                 .style({fill:nap.color, opacity:0.9});
@@ -79,8 +79,6 @@
         		nap = circledata.naps[i]
         		console.log(nap);
         		addpathForeground(nap);
-                console.log(dayratio(timeParse(nap.start))*360)
-                console.log(dayratio(timeParse(nap.end))*360)
         };
         
     // Invisible arc (zer0-thickness) at center of ring for text-label.
