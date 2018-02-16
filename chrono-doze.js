@@ -15,18 +15,18 @@
   // sleep unit, a tuple (start-time, end-time). Daily sleep, a list of sleep units.
   // sleep quality {"inadequate":red, "optimal":"green", "surplus":"blue"}
     var weekdata=[
-        {day:'Mon',naps:[{start:"00:34", end:"08:04", color:'#20FF20'}] ,quality:"green", color:'#C0FFC0'},
-        {day:'Tue',naps:[{start:"00:44", end:"08:51", color:'#20FF20'}] ,quality:"green", color:'#C0FFC0'},
-        {day:'Wed',naps:[{start:"00:10", end:"08:22", color:'#20FF20'}] ,quality:"green", color:'#C0FFC0'},
-        {day:'Thu',naps:[{start:"23:23", end:"09:47", color:'#2020FF'}] ,quality:"blue", color:'#C0C0FF'},
-        {day:'Fri',naps:[{start:"02:18", end:"06:15", color:'#FF2020'},
-        								 {start:"14:04", end:"15:10", color:'#FF2020'}] ,quality:"red", color:'#FFC0C0'},
-        {day:'Sat',naps:[{start:"00:31", end:"08:32", color:'#20FF20'}] ,quality:"green", color:'#C0FFC0'},
-        {day:'Sun',naps:[] ,quality:"green", color:'#DCDCDC'}
+        {weekday:'Mon',naps:[{start:"00:34", end:"08:04", color:"rgb(32, 255, 32)"}] ,quality:"green", color:"rgb(192, 255, 192)"},
+        {weekday:'Tue',naps:[{start:"00:44", end:"08:51", color:"rgb(32, 255, 32)"}] ,quality:"green", color:"rgb(192, 255, 192)"},
+        {weekday:'Wed',naps:[{start:"00:10", end:"08:22", color:"rgb(32, 255, 32)"}] ,quality:"green", color:"rgb(192, 255, 192)"},
+        {weekday:'Thu',naps:[{start:"23:23", end:"09:47", color:"rgb(32, 32, 255)"}] ,quality:"blue", color:"rgb(192, 192, 255)"},
+        {weekday:'Fri',naps:[{start:"02:18", end:"06:15", color:"rgb(255, 32, 32)"},
+        								 {start:"14:04", end:"15:10", color:"rgb(255, 32, 32)"}] ,quality:"red", color:"rgb(255, 192, 192)"},
+        {weekday:'Sat',naps:[{start:"00:31", end:"08:32", color:"rgb(32, 255, 32)"}] ,quality:"green", color:"rgb(192, 255, 192)"},
+        {weekday:'Sun',naps:[] ,quality:"green", color:"rgb(192, 192, 192)"}
         
     ];
   //var timeparser = d3.timeParse("%I:%M%p");
-  var timeParse =d3.timeParse("%H:%M");
+  var timeParse = d3.timeParse("%H:%M");
   var time = timeParse("12:34");
   var dayratio = function(time) { 
   		var unbalanced =  ((time.getHours()*60 + time.getMinutes()) / (24*60)) 
@@ -46,7 +46,7 @@
                 .outerRadius(outerRadius)
                 .startAngle(0)
                 .endAngle(2*Math.PI);
-
+                
         var pathBackground=svg.append('path')
                 .attr("d",arcBackground)
                 .style( {fill:circledata.color, opacity:0.6} )
@@ -63,7 +63,7 @@
                     endAngle:dayratio(timeParse(nap.end))*(2*Math.PI)
                 })
                 .attr({d:arcForeground})
-                .style({fill:nap.color});
+                .style({fill:nap.color, opacity:0.9});
 				};
         
         for (var i = 0, size = circledata.naps.length; i < size ; i++){
@@ -71,6 +71,26 @@
         		console.log(nap);
         		addpathForeground(nap);
         };
+        
+    // Invisible arc (zer0-thickness) at center of ring for text-label.
+        var carcBackground=d3.svg.arc() //center arc
+                .innerRadius( (innerRadius+outerRadius)/2 )
+                .outerRadius( (innerRadius+outerRadius)/2 )
+                .startAngle(0)
+                .endAngle(2*Math.PI);
+        
+        var cpathBackground=svg.append('path')
+                .attr("d",carcBackground)
+								.attr("id", circledata.weekday)
+        
+        var ctextBackground=svg.append("text")
+        				.attr("x", -1)
+        				.attr("dy", (outerRadius-innerRadius)/4)
+                .attr("transform","rotate(180)")
+                .append("textPath") //append a textPath to the text element
+                .attr("xlink:href", "#"+circledata.weekday)
+                .attr("startOffset","0%")
+                .text(circledata.weekday);
 
   };
   
@@ -79,24 +99,24 @@
       var gap = width * gapRatio;
       for (var day = 0; day < 7 ; day++){
       		outerRadius=innerRadius+width;
-          console.log(weekdata)
+          //console.log(weekdata)
+          console.log(weekdata[day].weekday);          
           createCircle(svg,innerRadius,outerRadius, weekdata[day]); 
-          console.log(weekdata[day].day);
           innerRadius = outerRadius+gap;
       }
   
   };
-  var width=400;
-  var height=400;
+  var width=512;
+  var height=512;
   var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height)
     .append("g")
     .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
     
-  //createCircle(svg,180,200,  {day:'Thu',naps:[{start:"23:23", end:"09:47", color:'#2020FF'}] ,quality:"blue", color:'#C0C0FF'}); 
+  //createCircle(svg,180,200,  {weekday:'Thu',naps:[{start:"23:23", end:"09:47", color:'#2020FF'}] ,quality:"blue", color:'#C0C0FF'}); 
   console.log(weekdata);
-  create7Circle(svg, 40,200,0.2,weekdata);
+  create7Circle(svg, 64,256,0.2,weekdata);
   
   
   
