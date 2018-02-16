@@ -10,7 +10,7 @@ console.log(formatDate(timeParse("05. 02. 2018 23:30")))
 console.log(date2weekday("2018-02-05"))
 
 var groupByDate=function(allnapsdata, f) {
-	//groupByDate function will define how naps are seggregated into days. An example problem: 
+  //groupByDate function will define how naps are seggregated into days. An example problem: 
   //How to determine day of naps which are across date boundaries. ex (26th 23:38 - 27th 6:05)
   //
   //This particular implementation sets the day of the nap as the end-day of the nap.
@@ -75,12 +75,11 @@ var dayQuality=function(daydata,qf){
   if (daydata.dquality !== undefined) {
   		return daydata.dqualit
   }else {
-  // T
-  		if (typeof qf == "function") {
+      if (typeof qf == "function") {
       	return qf(daydata);
       }else{
       	qf=function(daydata,effDailyTotalIdeal){
-        	//This takes a  weighted sum of nap durations in day as the
+          //This takes a  weighted sum of nap durations in day as the
           //effective-total-sleep where weight ~ {nap-quality}.This is normalised 
           //to an ideal effective-total to get score. 
           //efftotal within one hour of deviation from ideal is considered optimal(0).
