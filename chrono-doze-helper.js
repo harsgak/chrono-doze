@@ -214,6 +214,6 @@ var getNdaysDataUpto=function(endDate,N){
 }
 
 console.log("Week")
-console.log(getNdaysDataFrom("2017-07-04", 10))
+console.log(getNdaysDataFrom("2017-07-04", 7))
 console.log(getNdaysDataUpto("2017-08-04", 10))
 console.log(getNdaysDataFrom("2017-08-04", 10))
