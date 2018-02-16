@@ -108,32 +108,8 @@ dq2=dayQuality(alldaysdata["2017-07-05"])
 console.log(dq1)
 console.log(dq2)
 
-var dateRange = function(startDate, endDate) {
-  if (typeof startDate === 'string'){
-    startDate=dateParse(startDate)
-  }
-  if (typeof endDate === 'string'){
-    endDate=dateParse(endDate)
-  }
-  var dates = [];
-  var currentDate=startDate;
-  dates.push(new Date(currentDate));
-  while( currentDate < endDate ){
-    currentDate.setDate(currentDate.getDate() + 1);
-    dates.push(new Date(currentDate));
-  }
-  return dates
-
-}
-
-// Test dateRange
-dates1=dateRange("2017-07-04", "2017-08-04")
-dates2=dateRange(new Date( 2017, 06, 04), new Date( 2017, 07, 04))
-console.log(dates1)
-console.log(dates2)
-
 var colorMyDays=function(days){
-	//Applies chronodoze color-scheme according to dquality.interpret
+  //Applies chronodoze color-scheme according to dquality.interpret
   //Input: A collection of daydata objects . Ie. alldaysdata like object.
   chronodoze_color={
   	red:"rgb(255, 32, 32)",
@@ -174,3 +150,70 @@ var colorMyDays=function(days){
 //Test colorMyDays
 alldaysdata=colorMyDays(alldaysdata)
 console.log(alldaysdata)
+
+var dateRange = function(startDate, endDate) {
+  if (typeof startDate === 'string'){
+    startDate=dateParse(startDate)
+  }
+  if (typeof endDate === 'string'){
+    endDate=dateParse(endDate)
+  }
+  var dates = [];
+  var currentDate=startDate;
+  dates.push(new Date(currentDate));
+  while( currentDate < endDate ){
+    currentDate.setDate(currentDate.getDate() + 1);
+    dates.push(new Date(currentDate));
+  }
+  return dates.map(function(date){return formatDate(date)})
+
+}
+
+// Test dateRange
+dates1=dateRange("2017-07-04", "2017-08-04")
+dates2=dateRange(new Date( 2017, 06, 04), new Date( 2017, 07, 04))
+console.log(dates1)
+console.log(dates2)
+
+function addDays(date, ndays) {
+  //https://stackoverflow.com/a/19691491
+  var result = new Date(date);
+  result.setDate(result.getDate() + ndays);
+  return result;
+}
+
+var getNdaysDataFrom=function(startDate,N){
+  // This will provide a daydata array, each element of which can be passed to 
+  // the createCircle function as daydata. Each output daydata is nice (Meets full 
+  // req of createCircle)
+  if (typeof startDate === 'string'){
+    startDate=dateParse(startDate)
+  }
+  var dates=dateRange(startDate, addDays(startDate,N-1))
+  return dates.map(function(date){
+      var daydata= alldaysdata[date] || {naps:[], color:"rgb(192, 192, 192)"}
+      daydata.date=date
+      daydata.weekday=date2weekday(date)
+      return daydata
+    })
+}
+var getNdaysDataUpto=function(endDate,N){
+  // This will provide a daydata array, each element of which can be passed to 
+  // the createCircle function as daydata. Each output daydata is nice (Meets full 
+  // req of createCircle)
+  if (typeof endDate === 'string'){
+    endDate=dateParse(endDate)
+  }
+  var dates=dateRange(addDays(endDate,1-N), endDate)
+  return dates.map(function(date){
+      var daydata= alldaysdata[date] || {naps:[], color:"rgb(192, 192, 192)"}
+      daydata.date=date
+      daydata.weekday=date2weekday(date)
+      return daydata
+    })
+}
+
+console.log("Week")
+console.log(getNdaysDataFrom("2017-07-04", 10))
+console.log(getNdaysDataUpto("2017-08-04", 10))
+console.log(getNdaysDataFrom("2017-08-04", 10))
