@@ -122,14 +122,17 @@
     .attr("height", height)
     .append("g")
     .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
-    
+  
+  //Test WeekView
   //createCircle(svg,180,200,  {weekday:'Thu',naps:[{start:"23:23", end:"09:47", color:'#2020FF'}] ,quality:"blue", color:'#C0C0FF'}); 
-  console.log(weekdata);
-  create7Circle(svg, 64,250,0.2,weekdata);
+  //console.log(weekdata);
+  //create7Circle(svg, 64,250,0.2,weekdata);
+  //createCircle(svg,250,256,daydataticks)
   console.log("AllData")
   console.log(allnapsdata)
+  create7Circle(svg, 64,250,0.2, getNdaysDataUpto("2018-02-10", 7))
   createCircle(svg,250,256,daydataticks)
-  //create7Circle(svg, 64,250,0.2, getNdaysDataUpto("2018-02-16", 7))
+  
   
   
   
