@@ -120,8 +120,20 @@
   var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height)
-    .append("g")
+    .append("g").attr("id","chronos")
     .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+  var navbar = d3.select("svg").append("g")
+    .attr("id","chrono-nav")
+  
+//Add the SVG Text Element to the svgContainer
+//https://www.dashingd3js.com/svg-text-element
+var text = svgContainer.selectAll("text")
+                        .data(circleData)
+                        .enter()
+                        .append("text");
+
+  
+<text class="week_step" id="downweek" x="70" y="570">-</text>
   
   //Test WeekView
   //createCircle(svg,180,200,  {weekday:'Thu',naps:[{start:"23:23", end:"09:47", color:'#2020FF'}] ,quality:"blue", color:'#C0C0FF'}); 
@@ -130,7 +142,7 @@
   //createCircle(svg,250,256,daydataticks)
   console.log("AllData")
   console.log(allnapsdata)
-  create7Circle(svg, 64,250,0.2, getNdaysDataUpto("2018-02-10", 7))
+  create7Circle(svg, 64,250,0.2, getNdaysDataUpto("2018-02-03", 7))
   createCircle(svg,250,256,daydataticks)
   
   
