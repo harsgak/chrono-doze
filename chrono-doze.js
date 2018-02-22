@@ -68,7 +68,7 @@
         		var angles=nap2angles(nap)
         		svg.append('path')
                 .datum({
-                		startAngle:angles.start,
+                    startAngle:angles.start,
                     endAngle:angles.end
                 })
                 .attr({d:arcForeground})
@@ -93,7 +93,7 @@
 								.attr("id", circledata.weekday)
         
         var ctextBackground=svg.append("text")
-        				.attr("x", -1)
+        				.attr("x", 0)
         				.attr("dy", (outerRadius-innerRadius)/4)
                 .attr("transform","rotate(180)")
                 .append("textPath") //append a textPath to the text element
