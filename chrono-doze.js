@@ -104,36 +104,56 @@
   };
   
   var create7Circle=function(svg,innerRadius,outerRadius,gapRatio,weekdata){
-  		var width = (outerRadius - innerRadius) / (7 + 6*gapRatio);
+      var width = (outerRadius - innerRadius) / (7 + 6*gapRatio);
       var gap = width * gapRatio;
-      for (var day = 0; day < 7 ; day++){
-      		outerRadius=innerRadius+width;
-          //console.log(weekdata)
-          console.log(weekdata[day].weekday);          
-          createCircle(svg,innerRadius,outerRadius, weekdata[day]); 
-          innerRadius = outerRadius+gap;
-      }
-  
+      var days= svg.selectAll(".day")
+          .data(weekdata)
+      days.enter()
+          .append("g").attr("id",function(d,i){return "day"+i})
+          .attr("class", "day");
+    
+      days.each(function(daydata,dayindex){
+            var dayinnerRadius=innerRadius+dayindex*(width+gap)
+            var dayouterRadius=dayinnerRadius+width
+            dayCircleGroup=d3.select(this)
+            createCircle(dayCircleGroup,dayinnerRadius,dayouterRadius, daydata)
+          })
+      days.exit().remove()
+      return days
   };
+
   var width=512;
   var height=512;
   var svg = d3.select("body").append("svg")
     .attr("width", width)
-    .attr("height", height)
-    .append("g").attr("id","chronos")
+    .attr("height", 1.2*height) //extra height for navbar
+  var chronos =d3.select("svg").append("g")
+    .attr("id","chronos")
     .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
   var navbar = d3.select("svg").append("g")
     .attr("id","chrono-nav")
   
 //Add the SVG Text Element to the svgContainer
 //https://www.dashingd3js.com/svg-text-element
-var text = svgContainer.selectAll("text")
-                        .data(circleData)
+var buttonData = [{glyph: "<<", intent: "prevWeek", xratio: 0.125},
+                  {glyph: "<" , intent: "prevDay" , xratio: 0.375},
+                  {glyph: ">" , intent: "nextDay" , xratio: 0.625},
+                  {glyph: ">>", intent: "nextWeek", xratio: 0.875}
+                 ]
+var navbartext = navbar.selectAll("text")
+                        .data(buttonData)
                         .enter()
                         .append("text");
+navbartext = navbartext
+              .attr("x", function(d) { return width*d.xratio; })
+              .attr("y", function(d) { return height*1.1; })
+              .text( function (d) { return d.glyph; })
+              .attr("font-family", "sans-serif")
+              .attr("text-anchor","middle")
+              .attr("font-size", "32px")
+              .attr("fill", "grey");
 
-  
-<text class="week_step" id="downweek" x="70" y="570">-</text>
+
   
   //Test WeekView
   //createCircle(svg,180,200,  {weekday:'Thu',naps:[{start:"23:23", end:"09:47", color:'#2020FF'}] ,quality:"blue", color:'#C0C0FF'}); 
