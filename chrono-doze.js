@@ -122,8 +122,8 @@
       return days
   };
 
-  var width=512;
-  var height=512;
+  var width=522;
+  var height=522;
   var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", 1.2*height) //extra height for navbar
@@ -160,7 +160,7 @@ d3.select("#prevDay").on("click",function(){
   currentDay=addDays(currentDay,-1) || Date()
   console.log(currentDay)
   daysDisplay.remove()
-  daysDisplay=create7Circle(chronos,164,250,0.2, getNdaysDataUpto(currentDay, 7))
+  daysDisplay=create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
   
 })
 
@@ -168,7 +168,7 @@ d3.select("#nextDay").on("click",function(){
   console.log("nextDay")
   currentDay=addDays(currentDay,1) || Date()
   daysDisplay.remove()
-  daysDisplay=create7Circle(chronos,164,250,0.2, getNdaysDataUpto(currentDay, 7))
+  daysDisplay=create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
   
 })
 
@@ -177,7 +177,7 @@ d3.select("#prevWeek").on("click",function(){
   currentDay=addDays(currentDay,-7) || Date()
   console.log(currentDay)
   daysDisplay.remove()
-  daysDisplay=create7Circle(chronos,164,250,0.2, getNdaysDataUpto(currentDay, 7))
+  daysDisplay=create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
   
 })
 
@@ -185,7 +185,7 @@ d3.select("#nextWeek").on("click",function(){
   console.log("nextDay")
   currentDay=addDays(currentDay,7) || Date()
   daysDisplay.remove()
-  daysDisplay=create7Circle(chronos,164,250,0.2, getNdaysDataUpto(currentDay, 7))
+  daysDisplay=create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
   
 })
 
@@ -198,10 +198,10 @@ d3.select("#nextWeek").on("click",function(){
   console.log("AllData")
   console.log(allnapsdata)
   var currentDay = Date()
-  var daysDisplay=create7Circle(chronos,164,250,0.2, getNdaysDataUpto(currentDay, 7))
+  var daysDisplay=create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
   //create7Circle(chronos,164,250,0.2, getNdaysDataUpto("2018-02-03", 7))
   //console.log("7days",days)
-  createCircle(chronos,250,256,daydataticks)
+  createCircle(chronos,256,261,daydataticks)
   //days.data(getNdaysDataUpto("2018-01-03", 7))
 
   
