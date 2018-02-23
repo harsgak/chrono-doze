@@ -147,14 +147,49 @@ var navbartext = navbar.selectAll("text")
 navbartext = navbartext
               .attr("x", function(d) { return width*d.xratio; })
               .attr("y", function(d) { return height*1.1; })
+              .attr("id", function(d){return d.intent})
               .text( function (d) { return d.glyph; })
               .attr("font-family", "sans-serif")
               .attr("text-anchor","middle")
               .attr("font-size", "32px")
+              .attr("cursor", "pointer")
               .attr("fill", "grey");
 
-
+d3.select("#prevDay").on("click",function(){
+  console.log("prevDay")
+  currentDay=addDays(currentDay,-1) || Date()
+  console.log(currentDay)
+  daysDisplay.remove()
+  daysDisplay=create7Circle(chronos,164,250,0.2, getNdaysDataUpto(currentDay, 7))
   
+})
+
+d3.select("#nextDay").on("click",function(){
+  console.log("nextDay")
+  currentDay=addDays(currentDay,1) || Date()
+  daysDisplay.remove()
+  daysDisplay=create7Circle(chronos,164,250,0.2, getNdaysDataUpto(currentDay, 7))
+  
+})
+
+d3.select("#prevWeek").on("click",function(){
+  console.log("prevDay")
+  currentDay=addDays(currentDay,-7) || Date()
+  console.log(currentDay)
+  daysDisplay.remove()
+  daysDisplay=create7Circle(chronos,164,250,0.2, getNdaysDataUpto(currentDay, 7))
+  
+})
+
+d3.select("#nextWeek").on("click",function(){
+  console.log("nextDay")
+  currentDay=addDays(currentDay,7) || Date()
+  daysDisplay.remove()
+  daysDisplay=create7Circle(chronos,164,250,0.2, getNdaysDataUpto(currentDay, 7))
+  
+})
+
+
   //Test WeekView
   //createCircle(svg,180,200,  {weekday:'Thu',naps:[{start:"23:23", end:"09:47", color:'#2020FF'}] ,quality:"blue", color:'#C0C0FF'}); 
   //console.log(weekdata);
@@ -162,9 +197,16 @@ navbartext = navbartext
   //createCircle(svg,250,256,daydataticks)
   console.log("AllData")
   console.log(allnapsdata)
-  create7Circle(svg, 64,250,0.2, getNdaysDataUpto("2018-02-03", 7))
-  createCircle(svg,250,256,daydataticks)
+  var currentDay = Date()
+  var daysDisplay=create7Circle(chronos,164,250,0.2, getNdaysDataUpto(currentDay, 7))
+  //create7Circle(chronos,164,250,0.2, getNdaysDataUpto("2018-02-03", 7))
+  //console.log("7days",days)
+  createCircle(chronos,250,256,daydataticks)
+  //days.data(getNdaysDataUpto("2018-01-03", 7))
+
   
+  //days.remove()
+
   
   
   
