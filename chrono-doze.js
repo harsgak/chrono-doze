@@ -68,7 +68,7 @@
         		var angles=nap2angles(nap)
         		svg.append('path')
                 .datum({
-                		startAngle:angles.start,
+                    startAngle:angles.start,
                     endAngle:angles.end
                 })
                 .attr({d:arcForeground})
@@ -93,7 +93,7 @@
 								.attr("id", circledata.weekday)
         
         var ctextBackground=svg.append("text")
-        				.attr("x", -1)
+        				.attr("x", 0)
         				.attr("dy", (outerRadius-innerRadius)/4)
                 .attr("transform","rotate(180)")
                 .append("textPath") //append a textPath to the text element
@@ -104,25 +104,92 @@
   };
   
   var create7Circle=function(svg,innerRadius,outerRadius,gapRatio,weekdata){
-  		var width = (outerRadius - innerRadius) / (7 + 6*gapRatio);
+      var width = (outerRadius - innerRadius) / (7 + 6*gapRatio);
       var gap = width * gapRatio;
-      for (var day = 0; day < 7 ; day++){
-      		outerRadius=innerRadius+width;
-          //console.log(weekdata)
-          console.log(weekdata[day].weekday);          
-          createCircle(svg,innerRadius,outerRadius, weekdata[day]); 
-          innerRadius = outerRadius+gap;
-      }
-  
+      var days= svg.selectAll(".day")
+          .data(weekdata)
+      days.enter()
+          .append("g").attr("id",function(d,i){return "day"+i})
+          .attr("class", "day");
+    
+      days.each(function(daydata,dayindex){
+            var dayinnerRadius=innerRadius+dayindex*(width+gap)
+            var dayouterRadius=dayinnerRadius+width
+            dayCircleGroup=d3.select(this)
+            createCircle(dayCircleGroup,dayinnerRadius,dayouterRadius, daydata)
+          })
+      days.exit().remove()
+      return days
   };
-  var width=512;
-  var height=512;
+
+  var width=522;
+  var height=522;
   var svg = d3.select("body").append("svg")
     .attr("width", width)
-    .attr("height", height)
-    .append("g")
+    .attr("height", 1.2*height) //extra height for navbar
+  var chronos =d3.select("svg").append("g")
+    .attr("id","chronos")
     .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+  var navbar = d3.select("svg").append("g")
+    .attr("id","chrono-nav")
   
+//Add the SVG Text Element to the svgContainer
+//https://www.dashingd3js.com/svg-text-element
+var buttonData = [{glyph: "<<", intent: "prevWeek", xratio: 0.125},
+                  {glyph: "<" , intent: "prevDay" , xratio: 0.375},
+                  {glyph: ">" , intent: "nextDay" , xratio: 0.625},
+                  {glyph: ">>", intent: "nextWeek", xratio: 0.875}
+                 ]
+var navbartext = navbar.selectAll("text")
+                        .data(buttonData)
+                        .enter()
+                        .append("text");
+navbartext = navbartext
+              .attr("x", function(d) { return width*d.xratio; })
+              .attr("y", function(d) { return height*1.1; })
+              .attr("id", function(d){return d.intent})
+              .text( function (d) { return d.glyph; })
+              .attr("font-family", "sans-serif")
+              .attr("text-anchor","middle")
+              .attr("font-size", "32px")
+              .attr("cursor", "pointer")
+              .attr("fill", "grey");
+
+d3.select("#prevDay").on("click",function(){
+  console.log("prevDay")
+  currentDay=addDays(currentDay,-1) || Date()
+  console.log(currentDay)
+  daysDisplay.remove()
+  daysDisplay=create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
+  
+})
+
+d3.select("#nextDay").on("click",function(){
+  console.log("nextDay")
+  currentDay=addDays(currentDay,1) || Date()
+  daysDisplay.remove()
+  daysDisplay=create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
+  
+})
+
+d3.select("#prevWeek").on("click",function(){
+  console.log("prevDay")
+  currentDay=addDays(currentDay,-7) || Date()
+  console.log(currentDay)
+  daysDisplay.remove()
+  daysDisplay=create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
+  
+})
+
+d3.select("#nextWeek").on("click",function(){
+  console.log("nextDay")
+  currentDay=addDays(currentDay,7) || Date()
+  daysDisplay.remove()
+  daysDisplay=create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
+  
+})
+
+
   //Test WeekView
   //createCircle(svg,180,200,  {weekday:'Thu',naps:[{start:"23:23", end:"09:47", color:'#2020FF'}] ,quality:"blue", color:'#C0C0FF'}); 
   //console.log(weekdata);
@@ -130,9 +197,16 @@
   //createCircle(svg,250,256,daydataticks)
   console.log("AllData")
   console.log(allnapsdata)
-  create7Circle(svg, 64,250,0.2, getNdaysDataUpto("2018-02-10", 7))
-  createCircle(svg,250,256,daydataticks)
+  var currentDay = Date()
+  var daysDisplay=create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
+  //create7Circle(chronos,164,250,0.2, getNdaysDataUpto("2018-02-03", 7))
+  //console.log("7days",days)
+  createCircle(chronos,256,261,daydataticks)
+  //days.data(getNdaysDataUpto("2018-01-03", 7))
+
   
+  //days.remove()
+
   
   
   
