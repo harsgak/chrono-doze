@@ -131,8 +131,16 @@
     .attr("id","chronos")
     .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
   var navbar = d3.select("svg").append("g")
-    .attr("id","chrono-nav")
-  
+    .attr("id","chrono-navbar")
+  var navpuck = d3.select("svg").append("g")
+    .attr("id", "chrono-navpuck")
+    .append("circle")
+        .attr("cx", width/2)
+        .attr("cy", height/2)
+        .attr("r", 64)
+        .attr("fill", "lightgrey");
+
+
 //Add the SVG Text Element to the svgContainer
 //https://www.dashingd3js.com/svg-text-element
 var buttonData = [{glyph: "<<", intent: "prevWeek", xratio: 0.125},
@@ -144,6 +152,7 @@ var navbartext = navbar.selectAll("text")
                         .data(buttonData)
                         .enter()
                         .append("text");
+
 navbartext = navbartext
               .attr("x", function(d) { return width*d.xratio; })
               .attr("y", function(d) { return height*1.1; })
@@ -154,6 +163,9 @@ navbartext = navbartext
               .attr("font-size", "32px")
               .attr("cursor", "pointer")
               .attr("fill", "grey");
+
+
+
 
 d3.select("#prevDay").on("click",function(){
   console.log("prevDay")
@@ -173,7 +185,7 @@ d3.select("#nextDay").on("click",function(){
 })
 
 d3.select("#prevWeek").on("click",function(){
-  console.log("prevDay")
+  console.log("prevWeek")
   currentDay=addDays(currentDay,-7) || Date()
   console.log(currentDay)
   daysDisplay.remove()
@@ -182,11 +194,37 @@ d3.select("#prevWeek").on("click",function(){
 })
 
 d3.select("#nextWeek").on("click",function(){
-  console.log("nextDay")
+  console.log("nextWeek")
   currentDay=addDays(currentDay,7) || Date()
   daysDisplay.remove()
   daysDisplay=create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
   
+})
+
+var scrollBuffer=0
+d3.select("#chrono-navpuck").on("wheel",function(){
+  var deltaX = event.deltaX
+  var deltaY = event.deltaY
+  console.log("x"+event.deltaX+"y"+event.deltaY);
+  console.log(scrollBuffer);
+  scrollBuffer = scrollBuffer+deltaY || 0 
+  d3.event.stopPropagation()
+  
+  if (scrollBuffer > 10){
+      scrollBuffer = 0
+      console.log("nextDay")
+      currentDay=addDays(currentDay,1) || Date()
+      daysDisplay.remove()
+      daysDisplay=create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
+  } 
+  else if (scrollBuffer < -10){
+      scrollBuffer = 0
+      console.log("prevDay")
+      currentDay=addDays(currentDay,-1) || Date()
+      console.log(currentDay)
+      daysDisplay.remove()
+      daysDisplay=create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
+  }
 })
 
 
