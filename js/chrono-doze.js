@@ -143,10 +143,12 @@
 
 //Add the SVG Text Element to the svgContainer
 //https://www.dashingd3js.com/svg-text-element
-var buttonData = [{glyph: "<<", intent: "prevWeek", xratio: 0.125},
-                  {glyph: "<" , intent: "prevDay" , xratio: 0.375},
-                  {glyph: ">" , intent: "nextDay" , xratio: 0.625},
-                  {glyph: ">>", intent: "nextWeek", xratio: 0.875}
+var buttonData = [
+                  {glyph: "<<", intent: "prevWeek", xratio: 0.10, cursor:"pointer"},
+                  {glyph: "<" , intent: "prevDay" , xratio: 0.30, cursor:"pointer" },
+                  {glyph: "◉" , intent: "scrollButton" , xratio: 0.50, cursor:"all-scroll"},
+                  {glyph: ">" , intent: "nextDay" , xratio: 0.70, cursor:"pointer"},
+                  {glyph: ">>", intent: "nextWeek", xratio: 0.90, cursor:"pointer"}
                  ]
 var navbartext = navbar.selectAll("text")
                         .data(buttonData)
@@ -156,17 +158,17 @@ var navbartext = navbar.selectAll("text")
 navbartext = navbartext
               .attr("x", function(d) { return width*d.xratio; })
               .attr("y", function(d) { return height*1.1; })
-              .attr("id", function(d){return d.intent})
+              .attr("cursor", function(d){ return d.cursor })
+              .attr("id", function(d){ return d.intent})
               .text( function (d) { return d.glyph; })
               .attr("font-family", "sans-serif")
               .attr("text-anchor","middle")
               .attr("font-size", "32px")
-              .attr("cursor", "pointer")
               .attr("fill", "grey");
 
 
 
-
+//Interface Event Handlers
 d3.select("#prevDay").on("click",function(){
   console.log("prevDay")
   currentDay=addDays(currentDay,-1) || Date()
@@ -202,30 +204,33 @@ d3.select("#nextWeek").on("click",function(){
 })
 
 var scrollBuffer=0
-d3.select("#chrono-navpuck").on("wheel",function(){
-  var deltaX = event.deltaX
-  var deltaY = event.deltaY
-  console.log("x"+event.deltaX+"y"+event.deltaY);
-  console.log(scrollBuffer);
-  scrollBuffer = scrollBuffer+deltaY || 0 
-  d3.event.stopPropagation()
-  
-  if (scrollBuffer > 10){
-      scrollBuffer = 0
-      console.log("nextDay")
-      currentDay=addDays(currentDay,1) || Date()
-      daysDisplay.remove()
-      daysDisplay=create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
-  } 
-  else if (scrollBuffer < -10){
-      scrollBuffer = 0
-      console.log("prevDay")
-      currentDay=addDays(currentDay,-1) || Date()
-      console.log(currentDay)
-      daysDisplay.remove()
-      daysDisplay=create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
-  }
-})
+var scrollOverDays=function(){
+    var deltaX = event.deltaX
+    var deltaY = event.deltaY
+    console.log("x"+event.deltaX+"y"+event.deltaY);
+    console.log(scrollBuffer);
+    scrollBuffer = scrollBuffer+deltaY || 0 
+    d3.event.stopPropagation()
+
+    if (scrollBuffer > 10){
+        scrollBuffer = 0
+        console.log("nextDay")
+        currentDay=addDays(currentDay,1) || Date()
+        daysDisplay.remove()
+        daysDisplay=create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
+    } 
+    else if (scrollBuffer < -10){
+        scrollBuffer = 0
+        console.log("prevDay")
+        currentDay=addDays(currentDay,-1) || Date()
+        console.log(currentDay)
+        daysDisplay.remove()
+        daysDisplay=create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
+    }
+}
+
+d3.select("#scrollButton").on("wheel",scrollOverDays)
+d3.select("#chrono-navpuck").on("wheel",scrollOverDays)
 
 
   //Test WeekView
