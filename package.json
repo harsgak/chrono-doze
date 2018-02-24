@@ -1,0 +1,28 @@
+{
+  "name": "chrono-doze",
+  "version": "0.1.0",
+  "description": "View your dozing patterns on a chronometer-face.",
+  "main": "index.js",
+  "dependencies": {
+    "finalhandler": "^1.1.0",
+    "http": "0.0.0",
+    "serve-static": "^1.13.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/harsgak/chrono-doze.git"
+  },
+  "keywords": [
+    "sleep"
+  ],
+  "author": "harsgak & ykjawale",
+  "license": "LGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/harsgak/chrono-doze/issues"
+  },
+  "homepage": "https://github.com/harsgak/chrono-doze#readme"
+}
