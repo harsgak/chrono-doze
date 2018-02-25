@@ -67,12 +67,25 @@
         var addpathForeground=function(nap) {
         		var angles=nap2angles(nap)
         		svg.append('path')
-                .datum({
-                    startAngle:angles.start,
-                    endAngle:angles.end
-                })
-                .attr({d:arcForeground})
-                .style({fill:nap.color, opacity:0.9});
+                  .datum({
+                      startAngle:angles.start,
+                      endAngle:angles.end
+                  })
+                  .attr({d:arcForeground})
+                  .style({fill:nap.color, opacity:0.9})
+                    .on("mouseover", function(){
+                      tooltip.style("visibility", "visible")
+                              .style("opacity", 1)
+                              .style("background-color", circledata.color)
+                              .text("start: "+nap.start + "\nend:   "+nap.end + "\nhours: "+nap.hours);
+                    })
+                    .on("mousemove", function(){return tooltip.style("top", (event.pageY-20)+"px").style("left",(event.pageX+20)+"px");})
+                    .on("mouseout", function(){
+                      tooltip.style("visibility", "hidden")
+                              .style("opacity", 0)
+                              .style("background-color", null)
+                              .text("");                  
+                    });
 				};
         
         for (var i = 0, size = circledata.naps.length; i < size ; i++){
@@ -140,6 +153,26 @@
         .attr("r", 64)
         .attr("fill", "lightgrey");
 
+  var tooltip = d3.select("body")
+	.append("div")
+      .attr("class", "tooltip")
+      .style("visibility", "hidden")
+      .style("background-color", "lightgrey")
+      //.style("background-blend-mode", "lighten")
+      .style("border", "2px solid grey")
+      .style("border-radius", "5px")
+      .style("padding", "5px 5px")
+      .style("position", "absolute")
+      .style("z-index", 10)
+      //.style("text-align","center")
+      .style("font-family", "FreeMono, monospace")
+      //.style("font-weight", "bold")
+      .style("white-space", "pre-wrap")
+      .style("opacity", 0)
+      .style("transition", "opacity 0.5s")
+      
+      .text("cooltip")
+        //.style("color", "lightgrey")
 
 //Add the SVG Text Element to the svgContainer
 //https://www.dashingd3js.com/svg-text-element
