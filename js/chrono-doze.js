@@ -210,7 +210,7 @@ var scrollOverDays=function(){
     console.log("x"+event.deltaX+"y"+event.deltaY);
     console.log(scrollBuffer);
     scrollBuffer = scrollBuffer+deltaY || 0 
-    d3.event.stopPropagation()
+    event.preventDefault();
 
     if (scrollBuffer > 10){
         scrollBuffer = 0
