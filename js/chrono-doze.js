@@ -171,7 +171,7 @@ navbartext = navbartext
 //Interface Event Handlers
 d3.select("#prevDay").on("click",function(){
   console.log("prevDay")
-  currentDay=addDays(currentDay,-1) || Date()
+  currentDay=addDays(currentDay,-1) || new Date()
   console.log(currentDay)
   daysDisplay.remove()
   daysDisplay=create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
@@ -180,7 +180,7 @@ d3.select("#prevDay").on("click",function(){
 
 d3.select("#nextDay").on("click",function(){
   console.log("nextDay")
-  currentDay=addDays(currentDay,1) || Date()
+  currentDay=addDays(currentDay,1) || new Date()
   daysDisplay.remove()
   daysDisplay=create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
   
@@ -188,7 +188,7 @@ d3.select("#nextDay").on("click",function(){
 
 d3.select("#prevWeek").on("click",function(){
   console.log("prevWeek")
-  currentDay=addDays(currentDay,-7) || Date()
+  currentDay=addDays(currentDay,-7) || new Date()
   console.log(currentDay)
   daysDisplay.remove()
   daysDisplay=create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
@@ -197,7 +197,7 @@ d3.select("#prevWeek").on("click",function(){
 
 d3.select("#nextWeek").on("click",function(){
   console.log("nextWeek")
-  currentDay=addDays(currentDay,7) || Date()
+  currentDay=addDays(currentDay,7) || new Date()
   daysDisplay.remove()
   daysDisplay=create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
   
@@ -215,14 +215,14 @@ var scrollOverDays=function(){
     if (scrollBuffer > 10){
         scrollBuffer = 0
         console.log("nextDay")
-        currentDay=addDays(currentDay,1) || Date()
+        currentDay=addDays(currentDay,1) || new Date()
         daysDisplay.remove()
         daysDisplay=create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
     } 
     else if (scrollBuffer < -10){
         scrollBuffer = 0
         console.log("prevDay")
-        currentDay=addDays(currentDay,-1) || Date()
+        currentDay=addDays(currentDay,-1) || new Date()
         console.log(currentDay)
         daysDisplay.remove()
         daysDisplay=create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
@@ -240,8 +240,10 @@ d3.select("#chrono-navpuck").on("wheel",scrollOverDays)
   //createCircle(svg,250,256,daydataticks)
   console.log("AllData")
   console.log(allnapsdata)
-  var currentDay = Date()
-  var daysDisplay=create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
+  var currentDay
+  var daysDisplay
+  currentDay = new Date()
+  daysDisplay = create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
   //create7Circle(chronos,164,250,0.2, getNdaysDataUpto("2018-02-03", 7))
   //console.log("7days",days)
   createCircle(chronos,256,261,daydataticks)
