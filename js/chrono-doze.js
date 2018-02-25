@@ -113,7 +113,7 @@
           .attr("class", "day");
     
       days.each(function(daydata,dayindex){
-            var dayinnerRadius=innerRadius+dayindex*(width+gap)
+            var dayinnerRadius=innerRadius+(6-dayindex)*(width+gap)
             var dayouterRadius=dayinnerRadius+width
             dayCircleGroup=d3.select(this)
             createCircle(dayCircleGroup,dayinnerRadius,dayouterRadius, daydata)
