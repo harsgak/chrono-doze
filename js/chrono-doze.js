@@ -203,6 +203,13 @@ d3.select("#nextWeek").on("click",function(){
   
 })
 
+d3.select("#scrollButton").on("click", function(){
+  console.log("scrollButton")
+  currentDay=new Date()
+  daysDisplay.remove()
+  daysDisplay=create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
+})
+
 var scrollBuffer=0
 var scrollOverDays=function(){
     var deltaX = event.deltaX
