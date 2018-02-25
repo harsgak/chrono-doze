@@ -157,22 +157,10 @@
 	.append("div")
       .attr("class", "tooltip")
       .style("visibility", "hidden")
-      .style("background-color", "lightgrey")
-      //.style("background-blend-mode", "lighten")
-      .style("border", "2px solid grey")
-      .style("border-radius", "5px")
-      .style("padding", "5px 5px")
       .style("position", "absolute")
-      .style("z-index", 10)
-      //.style("text-align","center")
-      .style("font-family", "FreeMono, monospace")
-      //.style("font-weight", "bold")
       .style("white-space", "pre-wrap")
-      .style("opacity", 0)
-      .style("transition", "opacity 0.5s")
-      
-      .text("cooltip")
-        //.style("color", "lightgrey")
+      .style("z-index", 10)
+      .text("Tooltip")
 
 //Add the SVG Text Element to the svgContainer
 //https://www.dashingd3js.com/svg-text-element

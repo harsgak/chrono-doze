@@ -1,0 +1,21 @@
+.tooltip {
+  position:absolute;
+  z-index:10;
+  
+  visibility: hidden;
+  background-color: lightgrey;
+  border: 2px solid grey;
+  border-radius: 5px;
+  padding: 5px 5px;
+  
+  font-family: FreeMono, monospace;
+  white-space: pre-wrap;
+  
+  
+  opacity: 0;
+  transition: opacity 0.2s
+}
+
+.tooltip::after {
+  content: " ";
+}
