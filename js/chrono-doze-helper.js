@@ -102,9 +102,12 @@ var dayQuality=function(daydata,qf){
   }
 };
 
-//test napQuality
-dq1=dayQuality(alldaysdata["2017-07-04"])
-dq2=dayQuality(alldaysdata["2017-07-05"])
+//test dayQuality
+dayData1={ weekday:'Fri',naps:[{start:"14. 02. 2018 02:18", end:"14. 02. 2018 06:15", hours:3.9, color:"rgb(255, 32, 32)"},
+                                 {start:"14. 02. 2018 14:04", end:"14. 02. 2018 15:10", hours:1.05, color:"rgb(255, 32, 32)"}], quality:"red", color:"rgb(255, 192, 192)"}
+dayData2={ weekday:'Wed',naps:[{start:"12. 02. 2018 00:10", end:"12. 02. 2018 08:22", hours:8.1, color:"rgb(32, 255, 32)"}] ,quality:"green", color:"rgb(192, 255, 192)"}
+dq1=dayQuality(dayData1)
+dq2=dayQuality(dayData2)
 console.log(dq1)
 console.log(dq2)
 
@@ -213,6 +216,7 @@ var getNdaysDataUpto=function(endDate,N){
     })
 }
 
+//Test getNdaysData
 console.log("Week")
 console.log(getNdaysDataFrom("2017-07-04", 7))
 console.log(getNdaysDataUpto("2017-08-04", 10))
