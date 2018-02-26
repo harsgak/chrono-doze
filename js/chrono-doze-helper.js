@@ -73,7 +73,7 @@ var dayQuality=function(daydata,qf){
   //where dquality.value ~ anything
   //			dquality.interpret ~ -1/0/1	
   if (daydata.dquality !== undefined) {
-  		return daydata.dqualit
+  		return daydata.dquality
   }else {
       if (typeof qf == "function") {
       	return qf(daydata);
