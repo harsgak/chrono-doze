@@ -9,6 +9,31 @@ console.log(timeParse("05. 02. 2018 23:30"))
 console.log(formatDate(timeParse("05. 02. 2018 23:30")))
 console.log(date2weekday("2018-02-05"))
 
+var parseSleepAsAndroidExportFile=function(text) {
+  // Parses sleepata from sleep-export.csv file exported by `SleepAsAndroid`
+  // https://sleep.urbandroid.org/documentation/developer-api/csv/
+    var allnapsdata=[]
+    flist=text.split(/[\r\n]+/)
+    for ( index in flist ) {
+      index=parseInt(index)
+      linelst=flist[index].split(',')
+      if (linelst[0] == 'Id') {
+        datlist=flist[index+1].split(',')
+        nap ={
+          // We stripping the first and last chars because 
+          // they are like so:  ""numdata"" and parseInt/Float dont like that. 
+          id:parseInt(datlist[0].slice(1, -1)),
+          start:datlist[2].slice(1, -1),
+          end:datlist[3].slice(1, -1),
+          hours:parseFloat(datlist[5].slice(1, -1))
+        }
+        allnapsdata.push(nap)
+        //console.log(nap)
+      }
+    }
+    return allnapsdata
+  }
+
 var groupByDate=function(allnapsdata, f) {
   //groupByDate function will define how naps are seggregated into days. An example problem: 
   //How to determine day of naps which are across date boundaries. ex (26th 23:38 - 27th 6:05)
