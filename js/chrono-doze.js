@@ -266,20 +266,30 @@ d3.select("#chrono-navpuck").on("wheel",scrollOverDays)
   //console.log(weekdata);
   //create7Circle(svg, 64,250,0.2,weekdata);
   //createCircle(svg,250,256,daydataticks)
-  console.log("AllData")
-  console.log(allnapsdata)
-  var currentDay
-  var daysDisplay
-  currentDay = new Date()
-  daysDisplay = create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
+  //console.log("AllData")
+  //console.log(allnapsdata)
+  //var currentDay
+  //var daysDisplay
+  //currentDay = new Date()
+  //daysDisplay = create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
   //create7Circle(chronos,164,250,0.2, getNdaysDataUpto("2018-02-03", 7))
   //console.log("7days",days)
-  createCircle(chronos,256,261,daydataticks)
+  //createCircle(chronos,256,261,daydataticks)
   //days.data(getNdaysDataUpto("2018-01-03", 7))
-
-  
   //days.remove()
 
-  
-  
-  
+//Load data and plot
+var alldaysdata
+var currentDay
+var daysDisplay
+var csvFile = "/data/sleep-export.csv"
+d3.text(csvFile, function(error, text){
+    allnapsdata=parseSleepAsAndroidExportFile(text)
+    console.log("AllNapsData")
+    console.log(allnapsdata)
+    alldaysdata=groupByDate(allnapsdata)
+    alldaysdata=colorMyDays(alldaysdata)
+    currentDay = new Date()
+    daysDisplay = create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
+    createCircle(chronos,256,261,daydataticks)
+  });
