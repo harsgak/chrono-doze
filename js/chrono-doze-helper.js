@@ -9,6 +9,31 @@ console.log(timeParse("05. 02. 2018 23:30"))
 console.log(formatDate(timeParse("05. 02. 2018 23:30")))
 console.log(date2weekday("2018-02-05"))
 
+var parseSleepAsAndroidExportFile=function(text) {
+  // Parses sleepata from sleep-export.csv file exported by `SleepAsAndroid`
+  // https://sleep.urbandroid.org/documentation/developer-api/csv/
+    var allnapsdata=[]
+    flist=text.split(/[\r\n]+/)
+    for ( index in flist ) {
+      index=parseInt(index)
+      linelst=flist[index].split(',')
+      if (linelst[0] == 'Id') {
+        datlist=flist[index+1].split(',')
+        nap ={
+          // We stripping the first and last chars because 
+          // they are like so:  ""numdata"" and parseInt/Float dont like that. 
+          id:parseInt(datlist[0].slice(1, -1)),
+          start:datlist[2].slice(1, -1),
+          end:datlist[3].slice(1, -1),
+          hours:parseFloat(datlist[5].slice(1, -1))
+        }
+        allnapsdata.push(nap)
+        //console.log(nap)
+      }
+    }
+    return allnapsdata
+  }
+
 var groupByDate=function(allnapsdata, f) {
   //groupByDate function will define how naps are seggregated into days. An example problem: 
   //How to determine day of naps which are across date boundaries. ex (26th 23:38 - 27th 6:05)
@@ -73,7 +98,7 @@ var dayQuality=function(daydata,qf){
   //where dquality.value ~ anything
   //			dquality.interpret ~ -1/0/1	
   if (daydata.dquality !== undefined) {
-  		return daydata.dqualit
+  		return daydata.dquality
   }else {
       if (typeof qf == "function") {
       	return qf(daydata);
@@ -102,9 +127,12 @@ var dayQuality=function(daydata,qf){
   }
 };
 
-//test napQuality
-dq1=dayQuality(alldaysdata["2017-07-04"])
-dq2=dayQuality(alldaysdata["2017-07-05"])
+//test dayQuality
+dayData1={ weekday:'Fri',naps:[{start:"14. 02. 2018 02:18", end:"14. 02. 2018 06:15", hours:3.9, color:"rgb(255, 32, 32)"},
+                                 {start:"14. 02. 2018 14:04", end:"14. 02. 2018 15:10", hours:1.05, color:"rgb(255, 32, 32)"}], quality:"red", color:"rgb(255, 192, 192)"}
+dayData2={ weekday:'Wed',naps:[{start:"12. 02. 2018 00:10", end:"12. 02. 2018 08:22", hours:8.1, color:"rgb(32, 255, 32)"}] ,quality:"green", color:"rgb(192, 255, 192)"}
+dq1=dayQuality(dayData1)
+dq2=dayQuality(dayData2)
 console.log(dq1)
 console.log(dq2)
 
@@ -213,6 +241,7 @@ var getNdaysDataUpto=function(endDate,N){
     })
 }
 
+//Test getNdaysData
 console.log("Week")
 console.log(getNdaysDataFrom("2017-07-04", 7))
 console.log(getNdaysDataUpto("2017-08-04", 10))
