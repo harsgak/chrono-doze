@@ -227,11 +227,11 @@
 //Add the SVG Text Element to the svgContainer
 //https://www.dashingd3js.com/svg-text-element
 var navButtonData = [
-                  {glyph: "<<", intent: "prevWeek", xratio: 0.10, cursor:"pointer"},
-                  {glyph: "<" , intent: "prevDay" , xratio: 0.30, cursor:"pointer" },
-                  {glyph: "◉" , intent: "scrollButton" , xratio: 0.50, cursor:"all-scroll"},
-                  {glyph: ">" , intent: "nextDay" , xratio: 0.70, cursor:"pointer"},
-                  {glyph: ">>", intent: "nextWeek", xratio: 0.90, cursor:"pointer"}
+                  {glyph: "<<", intent: "prevWeek", label:"-7", xratio: 0.10, cursor:"pointer"},
+                  {glyph: "<" , intent: "prevDay" , label:"-1", xratio: 0.30, cursor:"pointer" },
+                  {glyph: "◉" , intent: "scrollButton", label:"◉", xratio: 0.50, cursor:"all-scroll"},
+                  {glyph: ">" , intent: "nextDay" , label:"+1", xratio: 0.70, cursor:"pointer"},
+                  {glyph: ">>", intent: "nextWeek", label:"+7", xratio: 0.90, cursor:"pointer"}
                  ]
 var navbartext = navbar.selectAll("text")
                         .data(navButtonData)
@@ -248,6 +248,23 @@ navbartext = navbartext
               .attr("text-anchor","middle")
               .attr("font-size", "32px")
               .attr("fill", "grey");
+
+var navbarlabels = navbar.selectAll(".navbarlabels")
+                        .data(navButtonData)
+                        .enter()
+                        .append("text")
+                          .attr("class", "navbarlabels");
+
+navbarlabels = navbarlabels
+              .attr("x", function(d) { return width*d.xratio; })
+              .attr("y", function(d) { return height*1.15; })
+              .attr("cursor", function(d){ return d.cursor })
+              .attr("id", function(d){ return d.intent})
+              .text( function (d) { return d.label; })
+              .attr("font-family", "sans-serif")
+              .attr("text-anchor","middle")
+              .attr("font-size", "16px")
+              .attr("fill", "lightgrey");
 
 
 
