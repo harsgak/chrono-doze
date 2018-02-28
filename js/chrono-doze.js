@@ -176,13 +176,15 @@
   var gapRatio=0.05;
   var puckRadius=64
   var svg = d3.select("body").append("svg")
-    .attr("width", width)
-    .attr("height", 1.2*height) //extra height for navbar
+    .attr("width", 1.2*width)
+    .attr("height", 1.2*height) //extra height for navbar+modebar
   var chronos =d3.select("svg").append("g")
     .attr("id","chronos")
     .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
   var navbar = d3.select("svg").append("g")
     .attr("id","chrono-navbar")
+  var modebar=d3.select("svg").append("g")
+    .attr("id","chrono-modebar");
   var navpuck = d3.select("svg").append("g")
     .attr("id", "chrono-navpuck")
     .append("circle")
@@ -224,7 +226,7 @@
 
 //Add the SVG Text Element to the svgContainer
 //https://www.dashingd3js.com/svg-text-element
-var buttonData = [
+var navButtonData = [
                   {glyph: "<<", intent: "prevWeek", xratio: 0.10, cursor:"pointer"},
                   {glyph: "<" , intent: "prevDay" , xratio: 0.30, cursor:"pointer" },
                   {glyph: "◉" , intent: "scrollButton" , xratio: 0.50, cursor:"all-scroll"},
@@ -232,7 +234,7 @@ var buttonData = [
                   {glyph: ">>", intent: "nextWeek", xratio: 0.90, cursor:"pointer"}
                  ]
 var navbartext = navbar.selectAll("text")
-                        .data(buttonData)
+                        .data(navButtonData)
                         .enter()
                         .append("text");
 
@@ -321,6 +323,36 @@ d3.select("#scrollButton").on("wheel",scrollOverDays)
 d3.select("#chrono-navpuck").on("wheel",scrollOverDays)
 
 
+var modeButtonData = [
+                  {glyph: "Week", intent: "7daymode", xratio: 0.10, cursor:"pointer"},
+                  {glyph: "14-Day" , intent: "14daymode" , xratio: 0.30, cursor:"pointer" },
+                  {glyph: "Month" , intent: "30daymode" , xratio: 0.50, cursor:"pointer"},
+                  {glyph: "60-Day" , intent: "60daymode" , xratio: 0.70, cursor:"pointer"},
+                  {glyph: "Year", intent: "365daymode", xratio: 0.90, cursor:"pointer"}
+                 ]
+var modebartext = modebar.selectAll("text")
+                        .data(modeButtonData)
+                        .enter()
+                        .append("text");
+
+modebartext = modebartext
+              .attr("x", function(d) { return width*1.1; })
+              .attr("y", function(d) { return height*d.xratio; })
+              .attr("cursor", function(d){ return d.cursor })
+              .attr("id", function(d){ return d.intent})
+              .text( function (d) { return d.glyph; })
+              .attr("font-family", "sans-serif")
+              .attr("text-anchor","middle")
+              .attr("font-size", "16")
+              .attr("fill", "grey")
+              .on("click", function(d){
+                  console.log("Switching mode"+d.intent)
+                  numDays = parseInt(d.intent); 
+                  daysDisplay.remove()
+                  daysDisplay = createNCircle(chronos,160,256,gapRatio,getNdaysDataUpto(currentDay, numDays),numDays)
+              });
+
+
   //Test WeekView
   //createCircle(svg,180,200,  {weekday:'Thu',naps:[{start:"23:23", end:"09:47", color:'#2020FF'}] ,quality:"blue", color:'#C0C0FF'}); 
   //console.log(weekdata);
@@ -352,7 +384,7 @@ d3.text(csvFile, function(error, text){
     alldaysdata=colorMyDays(alldaysdata)
     currentDay = new Date()
     createCircle(chronos,160,256,daydataticks)
-    numDays = 30
+    numDays = 14
     //daysDisplay = create7Circle(chronos,160,256,gapRatio, weekdata)
     daysDisplay = createNCircle(chronos,160,256,gapRatio,getNdaysDataUpto(currentDay, numDays),numDays)
 
