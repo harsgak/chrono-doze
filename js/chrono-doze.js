@@ -119,6 +119,7 @@
   var create7Circle=function(svg,innerRadius,outerRadius,gapRatio,weekdata){
       var width = (outerRadius - innerRadius) / (7 + 6*gapRatio);
       var gap = width * gapRatio;
+      updateDash(dashpuck,puckRadius,weekdata, "Week")
       var days= svg.selectAll(".day")
           .data(weekdata)
       days.enter()
@@ -135,8 +136,22 @@
       return days
   };
 
+  var updateDash=function(dashpuck,radius,rangeData,rangeName){
+    //selection.node().getBBox()
+    var format = d3.time.format("%b %d")
+    var year = dateParse(rangeData[0].date).getFullYear()
+    var startItem = format(dateParse(rangeData[0].date)) 
+    var endItem = format(dateParse(rangeData[rangeData.length-1].date))
+    dashpuck.select("#infodash-year").text(year).attr("dy", radius/2).attr("font-size", radius/2)
+    dashpuck.select("#infodash-rangeName").text(rangeName).attr("dy", -3*radius/5).attr("font-size", radius/4)
+    dashpuck.select("#infodash-rangeLimits").text(startItem+" - "+endItem).attr("dy", -radius/4).attr("font-size", radius/4)
+    
+  }
+
   var width=522;
   var height=522;
+  var gapRatio=0.05;
+  var puckRadius=64
   var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", 1.2*height) //extra height for navbar
@@ -150,8 +165,30 @@
     .append("circle")
         .attr("cx", width/2)
         .attr("cy", height/2)
-        .attr("r", 64)
+        .attr("r", puckRadius)
         .attr("fill", "lightgrey");
+  var dashpuck = d3.select("#chrono-navpuck").append("g")
+    .attr("id", "chrono-infodash")
+  dashpuck.append("text")
+      .attr("id", "infodash-year")
+      .attr("x", width/2)
+      .attr("y", height/2)
+      .attr("dy", 32)
+      .attr("text-anchor", "middle")
+      .text("Year")
+  dashpuck.append("text")
+      .attr("id", "infodash-rangeName")
+      .attr("x", width/2)
+      .attr("y", height/2)
+      .attr("dy", -32)
+      .attr("text-anchor", "middle")
+      .text("Week")
+  dashpuck.append("text")
+      .attr("id", "infodash-rangeLimits")
+      .attr("x", width/2)
+      .attr("y", height/2)
+      .attr("text-anchor", "middle")
+      .text("xyz - abc")
 
   var tooltip = d3.select("body")
 	.append("div")
@@ -195,7 +232,7 @@ d3.select("#prevDay").on("click",function(){
   currentDay=addDays(currentDay,-1) || new Date()
   console.log(currentDay)
   daysDisplay.remove()
-  daysDisplay=create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
+  daysDisplay=create7Circle(chronos,160,256,gapRatio, getNdaysDataUpto(currentDay, 7))
   
 })
 
@@ -203,7 +240,7 @@ d3.select("#nextDay").on("click",function(){
   console.log("nextDay")
   currentDay=addDays(currentDay,1) || new Date()
   daysDisplay.remove()
-  daysDisplay=create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
+  daysDisplay=create7Circle(chronos,160,256,gapRatio, getNdaysDataUpto(currentDay, 7))
   
 })
 
@@ -212,7 +249,7 @@ d3.select("#prevWeek").on("click",function(){
   currentDay=addDays(currentDay,-7) || new Date()
   console.log(currentDay)
   daysDisplay.remove()
-  daysDisplay=create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
+  daysDisplay=create7Circle(chronos,160,256,gapRatio, getNdaysDataUpto(currentDay, 7))
   
 })
 
@@ -220,7 +257,7 @@ d3.select("#nextWeek").on("click",function(){
   console.log("nextWeek")
   currentDay=addDays(currentDay,7) || new Date()
   daysDisplay.remove()
-  daysDisplay=create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
+  daysDisplay=create7Circle(chronos,160,256,gapRatio, getNdaysDataUpto(currentDay, 7))
   
 })
 
@@ -228,7 +265,7 @@ d3.select("#scrollButton").on("click", function(){
   console.log("scrollButton")
   currentDay=new Date()
   daysDisplay.remove()
-  daysDisplay=create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
+  daysDisplay=create7Circle(chronos,160,256,gapRatio, getNdaysDataUpto(currentDay, 7))
 })
 
 var scrollBuffer=0
@@ -245,7 +282,7 @@ var scrollOverDays=function(){
         console.log("nextDay")
         currentDay=addDays(currentDay,1) || new Date()
         daysDisplay.remove()
-        daysDisplay=create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
+        daysDisplay=create7Circle(chronos,160,256,gapRatio, getNdaysDataUpto(currentDay, 7))
     } 
     else if (scrollBuffer < -10){
         scrollBuffer = 0
@@ -253,7 +290,7 @@ var scrollOverDays=function(){
         currentDay=addDays(currentDay,-1) || new Date()
         console.log(currentDay)
         daysDisplay.remove()
-        daysDisplay=create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
+        daysDisplay=create7Circle(chronos,160,256,gapRatio, getNdaysDataUpto(currentDay, 7))
     }
 }
 
@@ -271,7 +308,7 @@ d3.select("#chrono-navpuck").on("wheel",scrollOverDays)
   //var currentDay
   //var daysDisplay
   //currentDay = new Date()
-  //daysDisplay = create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
+  //daysDisplay = create7Circle(chronos,160,256,gapRatio, getNdaysDataUpto(currentDay, 7))
   //create7Circle(chronos,164,250,0.2, getNdaysDataUpto("2018-02-03", 7))
   //console.log("7days",days)
   //createCircle(chronos,256,261,daydataticks)
@@ -290,6 +327,10 @@ d3.text(csvFile, function(error, text){
     alldaysdata=groupByDate(allnapsdata)
     alldaysdata=colorMyDays(alldaysdata)
     currentDay = new Date()
-    daysDisplay = create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
-    createCircle(chronos,256,261,daydataticks)
+    createCircle(chronos,160,256,daydataticks)
+    gapRatio = 0.05
+    weekdata=getNdaysDataUpto(currentDay, 7)
+    daysDisplay = create7Circle(chronos,160,256,gapRatio, weekdata)
+    updateDash(dashpuck,puckRadius,weekdata, "Week")
+
   });
