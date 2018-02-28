@@ -140,7 +140,7 @@
   var createNCircle=function(svg,innerRadius,outerRadius,gapRatio,ndaydata,N){
       var width = (outerRadius - innerRadius) / (N + (N-1)*gapRatio);
       var gap = width * gapRatio;
-      updateDash(dashpuck,puckRadius,ndaydata, "Month")
+      updateDash(dashpuck,puckRadius,ndaydata)
       var days= svg.selectAll(".day")
           .data(ndaydata)
       days.enter()
@@ -160,6 +160,8 @@
   var updateDash=function(dashpuck,radius,rangeData,rangeName){
     //selection.node().getBBox()
     var format = d3.time.format("%b %d")
+    var rangeModes = {7:"Week", 14:"Fortnight", 30:"Month", 60:"Bimonthly", 365:"Year"}
+    if (rangeName == undefined){rangeName=rangeModes[rangeData.length]}
     var year = dateParse(rangeData[0].date).getFullYear()
     var startItem = format(dateParse(rangeData[0].date)) 
     var endItem = format(dateParse(rangeData[rangeData.length-1].date))
