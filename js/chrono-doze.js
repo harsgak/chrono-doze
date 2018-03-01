@@ -258,7 +258,7 @@ var navbarlabels = navbar.selectAll(".navbarlabels")
 navbarlabels = navbarlabels
               .attr("x", function(d) { return width*d.xratio; })
               .attr("y", function(d) { return height*1.15; })
-              .attr("cursor", function(d){ return d.cursor })
+              //.attr("cursor", function(d){ return d.cursor })
               .attr("id", function(d){ return d.intent})
               .text( function (d) { return d.label; })
               .attr("font-family", "sans-serif")
