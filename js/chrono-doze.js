@@ -74,10 +74,18 @@
                   .attr({d:arcForeground})
                   .style({fill:nap.color, opacity:0.9})
                     .on("mouseover", function(){
+                      var comment = "";
+                      if (nap.hours<6.5){comment=" (Short) "}
+                      else if (nap.hours>8.5){comment=" (Long) "}
+                      else {comment=" (Good) "}
+                      // These comments are totally arbitary, not backed by research, 
+                      // and on behalf of @harsgak who is not a sleep-expert.
+                      // Remove them if deemed unnecessary
+ 
                       tooltip.style("visibility", "visible")
                               .style("opacity", 1)
                               .style("background-color", circledata.color)
-                              .text("start: "+nap.start + "\nend:   "+nap.end + "\nhours: "+nap.hours);
+                              .text("start: "+nap.start + "\nend:   "+nap.end + "\nhours: "+nap.hours + comment);
                     })
                     .on("mousemove", function(){return tooltip.style("top", (event.pageY-20)+"px").style("left",(event.pageX+20)+"px");})
                     .on("mouseout", function(){
