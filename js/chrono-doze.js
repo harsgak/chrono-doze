@@ -120,7 +120,7 @@
                 .append("textPath") //append a textPath to the text element
                 .attr("xlink:href", "#"+circledata.date+"center")
                 .attr("startOffset","0%")
-                .attr("font-size", 1.14*(outerRadius-innerRadius)) //tweak fontsize +14%
+                .attr("font-size", 1.12*(outerRadius-innerRadius)) //tweak fontsize +14%
                 .text(circledata.weekday);
 
   };
