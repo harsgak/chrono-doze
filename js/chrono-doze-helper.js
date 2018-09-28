@@ -63,10 +63,10 @@ var groupByDate=function(allnapsdata, f) {
 }
 
 //var result = groupBy(allnapsdata,function( nap ) { return formatDate(timeParse(nap.end))} ) 
-var alldaysdata = groupByDate(allnapsdata)
-var alldataKeys = Object.keys(alldaysdata)
-console.log(alldaysdata)
-console.log(alldataKeys)
+//var alldaysdata = groupByDate(allnapsdata)
+//var alldataKeys = Object.keys(alldaysdata)
+//console.log(alldaysdata)
+//console.log(alldataKeys)
 
 var napQuality=function(nap){
   if (nap.quality !== undefined) {return parseFloat(nap.quality)}
@@ -176,8 +176,8 @@ var colorMyDays=function(days){
 }
 
 //Test colorMyDays
-alldaysdata=colorMyDays(alldaysdata)
-console.log(alldaysdata)
+//alldaysdata=colorMyDays(alldaysdata)
+//console.log(alldaysdata)
 
 var dateRange = function(startDate, endDate) {
   if (typeof startDate === 'string'){
@@ -242,7 +242,7 @@ var getNdaysDataUpto=function(endDate,N){
 }
 
 //Test getNdaysData
-console.log("Week")
-console.log(getNdaysDataFrom("2017-07-04", 7))
-console.log(getNdaysDataUpto("2017-08-04", 10))
-console.log(getNdaysDataFrom("2017-08-04", 10))
+//console.log("Week")
+//console.log(getNdaysDataFrom("2017-07-04", 7))
+//console.log(getNdaysDataUpto("2017-08-04", 10))
+//console.log(getNdaysDataFrom("2017-08-04", 10))
