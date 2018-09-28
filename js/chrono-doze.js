@@ -179,8 +179,8 @@
     
   }
 
-  var width=512;
-  var height=512;
+  var width=522;
+  var height=522;
   var inR = 102;
   var outR = 256;
   var gapRatio=0.125;
