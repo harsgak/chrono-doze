@@ -32,7 +32,7 @@
         {id: "0", start: "01. 01. 0101 17:59", end: "01. 01. 0101 18:01", hours: "0.033", color: "rgb(32, 32, 32)"}], 
                        weekday: "", 
                        totalhours: 0, 
-                       date: "0101-01-01", 
+                       date: "",
                        color: "rgb(255, 255, 255)"}
     
   var time = timeParse("02. 07. 2017 13:51");
@@ -121,7 +121,7 @@
                 .attr("xlink:href", "#"+circledata.date+"center")
                 .attr("startOffset","0%")
                 .attr("font-size", 1.12*(outerRadius-innerRadius)) //tweak fontsize +14%
-                .text(circledata.weekday);
+                .text(circledata.date.substring(5) +' '+ circledata.weekday);
 
   };
   
