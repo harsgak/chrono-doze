@@ -298,7 +298,7 @@ d3.select("#nextDay").on("click",function(){
 
 d3.select("#prevWeek").on("click",function(){
   console.log("prevWeek")
-  currentDay=addDays(currentDay,-numDays) || new Date()
+  currentDay=addDays(currentDay,-7) || new Date()
   console.log(currentDay)
   daysDisplay.remove()
   daysDisplay = createNCircle(chronos,inR,outR,gapRatio,getNdaysDataUpto(currentDay, numDays),numDays)
@@ -307,7 +307,7 @@ d3.select("#prevWeek").on("click",function(){
 
 d3.select("#nextWeek").on("click",function(){
   console.log("nextWeek")
-  currentDay=addDays(currentDay,numDays) || new Date()
+  currentDay=addDays(currentDay,7) || new Date()
   daysDisplay.remove()
   daysDisplay = createNCircle(chronos,inR,outR,gapRatio,getNdaysDataUpto(currentDay, numDays),numDays)
   
