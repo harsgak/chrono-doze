@@ -175,7 +175,7 @@
     var endItem = format(dateParse(rangeData[rangeData.length-1].date))
     dashpuck.select("#infodash-year").text(year).attr("dy", radius/2).attr("font-size", radius/2)
     dashpuck.select("#infodash-rangeName").text(rangeName).attr("dy", -3*radius/5).attr("font-size", radius/4)
-    dashpuck.select("#infodash-rangeLimits").text(startItem+" - "+endItem).attr("dy", -radius/4).attr("font-size", radius/4)
+    dashpuck.select("#infodash-rangeLimits").text(startItem+" - "+endItem).attr("dy", -0.9*radius/4).attr("font-size", 0.9*radius/4)
     
   }
 
