@@ -168,7 +168,7 @@
   var updateDash=function(dashpuck,radius,rangeData,rangeName){
     //selection.node().getBBox()
     var format = d3.time.format("%b %d")
-    var rangeModes = {7:"Week", 14:"Fortnight", 30:"Month", 60:"Bimonthly", 365:"Year"}
+    var rangeModes = {7:"Week", 14:"Fortnight", 30:"Month", 60:"Bimonthly", 120:"Season"}
     if (rangeName == undefined){rangeName=rangeModes[rangeData.length]}
     var year = dateParse(rangeData[0].date).getFullYear()
     var startItem = format(dateParse(rangeData[0].date)) 
@@ -355,7 +355,7 @@ var modeButtonData = [
                   {glyph: "14-Day" , intent: "14daymode" , xratio: 0.30, cursor:"pointer" },
                   {glyph: "Month" , intent: "30daymode" , xratio: 0.50, cursor:"pointer"},
                   {glyph: "60-Day" , intent: "60daymode" , xratio: 0.70, cursor:"pointer"},
-                  {glyph: "Year", intent: "365daymode", xratio: 0.90, cursor:"pointer"}
+                  {glyph: "Season", intent: "120daymode", xratio: 0.90, cursor:"pointer"}
                  ]
 var modebartext = modebar.selectAll("text")
                         .data(modeButtonData)
