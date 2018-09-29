@@ -11,5 +11,5 @@ var server = http.createServer(function onRequest (req, res) {
 })
 
 // Listen
-console.log('Starting server, goto http://localhost:8080');
+console.log('Starting chronodoze, goto http://localhost:8080');
 server.listen(8080)

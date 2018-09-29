@@ -32,8 +32,8 @@
         {id: "0", start: "01. 01. 0101 17:59", end: "01. 01. 0101 18:01", hours: "0.033", color: "rgb(32, 32, 32)"}], 
                        weekday: "", 
                        totalhours: 0, 
-                       date: "0101-01-01", 
-                       color: "rgb(232, 232, 232)"}
+                       date: "",
+                       color: "rgb(255, 255, 255)"}
     
   var time = timeParse("02. 07. 2017 13:51");
   var nap2angles=function(nap, daydata){
@@ -74,10 +74,18 @@
                   .attr({d:arcForeground})
                   .style({fill:nap.color, opacity:0.9})
                     .on("mouseover", function(){
+                      var comment = "";
+                      if (nap.hours<6.5){comment=" (Short) "}
+                      else if (nap.hours>8.5){comment=" (Long) "}
+                      else {comment=" (Good) "}
+                      // These comments are totally arbitary, not backed by research, 
+                      // and on behalf of @harsgak who is not a sleep-expert.
+                      // Remove them if deemed unnecessary
+ 
                       tooltip.style("visibility", "visible")
                               .style("opacity", 1)
                               .style("background-color", circledata.color)
-                              .text("start: "+nap.start + "\nend:   "+nap.end + "\nhours: "+nap.hours);
+                              .text("start: "+nap.start + "\nend:   "+nap.end + "\nhours: "+nap.hours + comment);
                     })
                     .on("mousemove", function(){return tooltip.style("top", (event.pageY-20)+"px").style("left",(event.pageX+20)+"px");})
                     .on("mouseout", function(){
@@ -103,22 +111,24 @@
         
         var cpathBackground=svg.append('path')
                 .attr("d",carcBackground)
-								.attr("id", circledata.weekday)
+								.attr("id", circledata.date+"center")
         
         var ctextBackground=svg.append("text")
         				.attr("x", 0)
         				.attr("dy", (outerRadius-innerRadius)/4)
                 .attr("transform","rotate(180)")
                 .append("textPath") //append a textPath to the text element
-                .attr("xlink:href", "#"+circledata.weekday)
+                .attr("xlink:href", "#"+circledata.date+"center")
                 .attr("startOffset","0%")
-                .text(circledata.weekday);
+                .attr("font-size", 1.12*(outerRadius-innerRadius)) //tweak fontsize +12%
+                .text(circledata.date.substring(5) +' '+ circledata.weekday);
 
   };
   
   var create7Circle=function(svg,innerRadius,outerRadius,gapRatio,weekdata){
       var width = (outerRadius - innerRadius) / (7 + 6*gapRatio);
       var gap = width * gapRatio;
+      updateDash(dashpuck,puckRadius,weekdata, "Week")
       var days= svg.selectAll(".day")
           .data(weekdata)
       days.enter()
@@ -135,23 +145,85 @@
       return days
   };
 
+  var createNCircle=function(svg,innerRadius,outerRadius,gapRatio,ndaydata,N){
+      var width = (outerRadius - innerRadius) / (N + (N-1)*gapRatio);
+      var gap = width * gapRatio;
+      updateDash(dashpuck,puckRadius,ndaydata)
+      var days= svg.selectAll(".day")
+          .data(ndaydata)
+      days.enter()
+          .append("g").attr("id",function(d,i){return "day"+i})
+          .attr("class", "day");
+    
+      days.each(function(daydata,dayindex){
+            var dayinnerRadius=innerRadius+((N-1)-dayindex)*(width+gap)
+            var dayouterRadius=dayinnerRadius+width
+            dayCircleGroup=d3.select(this)
+            createCircle(dayCircleGroup,dayinnerRadius,dayouterRadius, daydata)
+          })
+      days.exit().remove()
+      return days
+  };
+
+  var updateDash=function(dashpuck,radius,rangeData,rangeName){
+    //selection.node().getBBox()
+    var format = d3.time.format("%b %d")
+    var rangeModes = {7:"Week", 14:"Fortnight", 30:"Month", 60:"Bimonthly", 120:"Season"}
+    if (rangeName == undefined){rangeName=rangeModes[rangeData.length]}
+    var year = dateParse(rangeData[0].date).getFullYear()
+    var startItem = format(dateParse(rangeData[0].date)) 
+    var endItem = format(dateParse(rangeData[rangeData.length-1].date))
+    dashpuck.select("#infodash-year").text(year).attr("dy", radius/2).attr("font-size", radius/2)
+    dashpuck.select("#infodash-rangeName").text(rangeName).attr("dy", -3*radius/5).attr("font-size", radius/4)
+    dashpuck.select("#infodash-rangeLimits").text(startItem+" - "+endItem).attr("dy", -0.9*radius/4).attr("font-size", 0.9*radius/4)
+    
+  }
+
   var width=522;
   var height=522;
+  var inR = 102;
+  var outR = 256;
+  var gapRatio=0.125;
+  var puckRadius=64;
   var svg = d3.select("body").append("svg")
-    .attr("width", width)
-    .attr("height", 1.2*height) //extra height for navbar
+    .attr("width", 1.2*width)
+    .attr("height", 1.2*height) //extra height for navbar+modebar
   var chronos =d3.select("svg").append("g")
     .attr("id","chronos")
     .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
   var navbar = d3.select("svg").append("g")
     .attr("id","chrono-navbar")
+  var modebar=d3.select("svg").append("g")
+    .attr("id","chrono-modebar");
   var navpuck = d3.select("svg").append("g")
     .attr("id", "chrono-navpuck")
     .append("circle")
         .attr("cx", width/2)
         .attr("cy", height/2)
-        .attr("r", 64)
+        .attr("r", puckRadius)
         .attr("fill", "lightgrey");
+  var dashpuck = d3.select("#chrono-navpuck").append("g")
+    .attr("id", "chrono-infodash")
+  dashpuck.append("text")
+      .attr("id", "infodash-year")
+      .attr("x", width/2)
+      .attr("y", height/2)
+      .attr("dy", 32)
+      .attr("text-anchor", "middle")
+      .text("Year")
+  dashpuck.append("text")
+      .attr("id", "infodash-rangeName")
+      .attr("x", width/2)
+      .attr("y", height/2)
+      .attr("dy", -32)
+      .attr("text-anchor", "middle")
+      .text("Week")
+  dashpuck.append("text")
+      .attr("id", "infodash-rangeLimits")
+      .attr("x", width/2)
+      .attr("y", height/2)
+      .attr("text-anchor", "middle")
+      .text("xyz - abc")
 
   var tooltip = d3.select("body")
 	.append("div")
@@ -164,15 +236,15 @@
 
 //Add the SVG Text Element to the svgContainer
 //https://www.dashingd3js.com/svg-text-element
-var buttonData = [
-                  {glyph: "<<", intent: "prevWeek", xratio: 0.10, cursor:"pointer"},
-                  {glyph: "<" , intent: "prevDay" , xratio: 0.30, cursor:"pointer" },
-                  {glyph: "◉" , intent: "scrollButton" , xratio: 0.50, cursor:"all-scroll"},
-                  {glyph: ">" , intent: "nextDay" , xratio: 0.70, cursor:"pointer"},
-                  {glyph: ">>", intent: "nextWeek", xratio: 0.90, cursor:"pointer"}
+var navButtonData = [
+                  {glyph: "<<", intent: "prevWeek", label:"-7", xratio: 0.10, cursor:"pointer"},
+                  {glyph: "<" , intent: "prevDay" , label:"-1", xratio: 0.30, cursor:"pointer" },
+                  {glyph: "◉" , intent: "scrollButton", label:"◉", xratio: 0.50, cursor:"all-scroll"},
+                  {glyph: ">" , intent: "nextDay" , label:"+1", xratio: 0.70, cursor:"pointer"},
+                  {glyph: ">>", intent: "nextWeek", label:"+7", xratio: 0.90, cursor:"pointer"}
                  ]
 var navbartext = navbar.selectAll("text")
-                        .data(buttonData)
+                        .data(navButtonData)
                         .enter()
                         .append("text");
 
@@ -187,6 +259,23 @@ navbartext = navbartext
               .attr("font-size", "32px")
               .attr("fill", "grey");
 
+var navbarlabels = navbar.selectAll(".navbarlabels")
+                        .data(navButtonData)
+                        .enter()
+                        .append("text")
+                          .attr("class", "navbarlabels");
+
+navbarlabels = navbarlabels
+              .attr("x", function(d) { return width*d.xratio; })
+              .attr("y", function(d) { return height*1.15; })
+              //.attr("cursor", function(d){ return d.cursor })
+              .attr("id", function(d){ return d.intent})
+              .text( function (d) { return d.label; })
+              .attr("font-family", "sans-serif")
+              .attr("text-anchor","middle")
+              .attr("font-size", "16px")
+              .attr("fill", "lightgrey");
+
 
 
 //Interface Event Handlers
@@ -195,7 +284,7 @@ d3.select("#prevDay").on("click",function(){
   currentDay=addDays(currentDay,-1) || new Date()
   console.log(currentDay)
   daysDisplay.remove()
-  daysDisplay=create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
+  daysDisplay = createNCircle(chronos,inR,outR,gapRatio,getNdaysDataUpto(currentDay, numDays),numDays)
   
 })
 
@@ -203,7 +292,7 @@ d3.select("#nextDay").on("click",function(){
   console.log("nextDay")
   currentDay=addDays(currentDay,1) || new Date()
   daysDisplay.remove()
-  daysDisplay=create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
+  daysDisplay = createNCircle(chronos,inR,outR,gapRatio,getNdaysDataUpto(currentDay, numDays),numDays)
   
 })
 
@@ -212,7 +301,7 @@ d3.select("#prevWeek").on("click",function(){
   currentDay=addDays(currentDay,-7) || new Date()
   console.log(currentDay)
   daysDisplay.remove()
-  daysDisplay=create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
+  daysDisplay = createNCircle(chronos,inR,outR,gapRatio,getNdaysDataUpto(currentDay, numDays),numDays)
   
 })
 
@@ -220,7 +309,7 @@ d3.select("#nextWeek").on("click",function(){
   console.log("nextWeek")
   currentDay=addDays(currentDay,7) || new Date()
   daysDisplay.remove()
-  daysDisplay=create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
+  daysDisplay = createNCircle(chronos,inR,outR,gapRatio,getNdaysDataUpto(currentDay, numDays),numDays)
   
 })
 
@@ -228,7 +317,7 @@ d3.select("#scrollButton").on("click", function(){
   console.log("scrollButton")
   currentDay=new Date()
   daysDisplay.remove()
-  daysDisplay=create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
+  daysDisplay = createNCircle(chronos,inR,outR,gapRatio,getNdaysDataUpto(currentDay, numDays),numDays)
 })
 
 var scrollBuffer=0
@@ -245,7 +334,7 @@ var scrollOverDays=function(){
         console.log("nextDay")
         currentDay=addDays(currentDay,1) || new Date()
         daysDisplay.remove()
-        daysDisplay=create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
+        daysDisplay = createNCircle(chronos,inR,outR,gapRatio,getNdaysDataUpto(currentDay, numDays),numDays)
     } 
     else if (scrollBuffer < -10){
         scrollBuffer = 0
@@ -253,12 +342,42 @@ var scrollOverDays=function(){
         currentDay=addDays(currentDay,-1) || new Date()
         console.log(currentDay)
         daysDisplay.remove()
-        daysDisplay=create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
+        daysDisplay = createNCircle(chronos,inR,outR,gapRatio,getNdaysDataUpto(currentDay, numDays),numDays)
     }
 }
 
 d3.select("#scrollButton").on("wheel",scrollOverDays)
 d3.select("#chrono-navpuck").on("wheel",scrollOverDays)
+
+
+var modeButtonData = [
+                  {glyph: "Week", intent: "7daymode", xratio: 0.10, cursor:"pointer"},
+                  {glyph: "14-Day" , intent: "14daymode" , xratio: 0.30, cursor:"pointer" },
+                  {glyph: "Month" , intent: "30daymode" , xratio: 0.50, cursor:"pointer"},
+                  {glyph: "60-Day" , intent: "60daymode" , xratio: 0.70, cursor:"pointer"},
+                  {glyph: "Season", intent: "120daymode", xratio: 0.90, cursor:"pointer"}
+                 ]
+var modebartext = modebar.selectAll("text")
+                        .data(modeButtonData)
+                        .enter()
+                        .append("text");
+
+modebartext = modebartext
+              .attr("x", function(d) { return width*1.1; })
+              .attr("y", function(d) { return height*d.xratio; })
+              .attr("cursor", function(d){ return d.cursor })
+              .attr("id", function(d){ return d.intent})
+              .text( function (d) { return d.glyph; })
+              .attr("font-family", "sans-serif")
+              .attr("text-anchor","middle")
+              .attr("font-size", "16")
+              .attr("fill", "grey")
+              .on("click", function(d){
+                  console.log("Switching mode"+d.intent)
+                  numDays = parseInt(d.intent); 
+                  daysDisplay.remove()
+                  daysDisplay = createNCircle(chronos,inR,outR,gapRatio,getNdaysDataUpto(currentDay, numDays),numDays)
+              });
 
 
   //Test WeekView
@@ -271,7 +390,7 @@ d3.select("#chrono-navpuck").on("wheel",scrollOverDays)
   //var currentDay
   //var daysDisplay
   //currentDay = new Date()
-  //daysDisplay = create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
+  //daysDisplay = create7Circle(chronos,inR,outR,gapRatio, getNdaysDataUpto(currentDay, 7))
   //create7Circle(chronos,164,250,0.2, getNdaysDataUpto("2018-02-03", 7))
   //console.log("7days",days)
   //createCircle(chronos,256,261,daydataticks)
@@ -282,6 +401,7 @@ d3.select("#chrono-navpuck").on("wheel",scrollOverDays)
 var alldaysdata
 var currentDay
 var daysDisplay
+var numDays
 var csvFile = "/data/sleep-export.csv"
 d3.text(csvFile, function(error, text){
     allnapsdata=parseSleepAsAndroidExportFile(text)
@@ -290,6 +410,9 @@ d3.text(csvFile, function(error, text){
     alldaysdata=groupByDate(allnapsdata)
     alldaysdata=colorMyDays(alldaysdata)
     currentDay = new Date()
-    daysDisplay = create7Circle(chronos,160,256,0.05, getNdaysDataUpto(currentDay, 7))
-    createCircle(chronos,256,261,daydataticks)
+    createCircle(chronos,inR,outR,daydataticks)
+    numDays = 14
+    //daysDisplay = create7Circle(chronos,inR,outR,gapRatio, weekdata)
+    daysDisplay = createNCircle(chronos,inR,outR,gapRatio,getNdaysDataUpto(currentDay, numDays),numDays)
+
   });

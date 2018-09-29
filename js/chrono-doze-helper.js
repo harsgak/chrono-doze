@@ -10,7 +10,7 @@ console.log(formatDate(timeParse("05. 02. 2018 23:30")))
 console.log(date2weekday("2018-02-05"))
 
 var parseSleepAsAndroidExportFile=function(text) {
-  // Parses sleepata from sleep-export.csv file exported by `SleepAsAndroid`
+  // Parses sleepdata from sleep-export.csv file exported by `SleepAsAndroid`
   // https://sleep.urbandroid.org/documentation/developer-api/csv/
     var allnapsdata=[]
     flist=text.split(/[\r\n]+/)
@@ -20,7 +20,7 @@ var parseSleepAsAndroidExportFile=function(text) {
       if (linelst[0] == 'Id') {
         datlist=flist[index+1].split(',')
         nap ={
-          // We stripping the first and last chars because 
+          // We are stripping the first and last chars because
           // they are like so:  ""numdata"" and parseInt/Float dont like that. 
           id:parseInt(datlist[0].slice(1, -1)),
           start:datlist[2].slice(1, -1),
@@ -63,10 +63,10 @@ var groupByDate=function(allnapsdata, f) {
 }
 
 //var result = groupBy(allnapsdata,function( nap ) { return formatDate(timeParse(nap.end))} ) 
-var alldaysdata = groupByDate(allnapsdata)
-var alldataKeys = Object.keys(alldaysdata)
-console.log(alldaysdata)
-console.log(alldataKeys)
+//var alldaysdata = groupByDate(allnapsdata)
+//var alldataKeys = Object.keys(alldaysdata)
+//console.log(alldaysdata)
+//console.log(alldataKeys)
 
 var napQuality=function(nap){
   if (nap.quality !== undefined) {return parseFloat(nap.quality)}
@@ -176,8 +176,8 @@ var colorMyDays=function(days){
 }
 
 //Test colorMyDays
-alldaysdata=colorMyDays(alldaysdata)
-console.log(alldaysdata)
+//alldaysdata=colorMyDays(alldaysdata)
+//console.log(alldaysdata)
 
 var dateRange = function(startDate, endDate) {
   if (typeof startDate === 'string'){
@@ -242,7 +242,7 @@ var getNdaysDataUpto=function(endDate,N){
 }
 
 //Test getNdaysData
-console.log("Week")
-console.log(getNdaysDataFrom("2017-07-04", 7))
-console.log(getNdaysDataUpto("2017-08-04", 10))
-console.log(getNdaysDataFrom("2017-08-04", 10))
+//console.log("Week")
+//console.log(getNdaysDataFrom("2017-07-04", 7))
+//console.log(getNdaysDataUpto("2017-08-04", 10))
+//console.log(getNdaysDataFrom("2017-08-04", 10))
