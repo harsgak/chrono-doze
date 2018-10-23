@@ -31,9 +31,8 @@ python -m http.server 8080
 
 2. Open chrono-doze being served at http://localhost:8080/chrono-doze.html  
 
----
 > Note: If you are stuck with Python 2.x use SimpleHTTPServer instead of http.server
----
+
 ## Input
 
 The way to provide your sleep data to chrono-doze is old fasioned, yet straightforward.
