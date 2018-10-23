@@ -1,5 +1,6 @@
 # chrono-doze
-Sleeping patterns on 24-h clock-face
+Sleeping patterns on 24-h clock-face  
+[[Try it here]](https://harsgak.github.io/chrono-doze/chrono-doze.html)
 
 ## Quickstart
 
