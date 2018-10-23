@@ -315,7 +315,7 @@ d3.select("#nextWeek").on("click",function(){
 
 d3.select("#scrollButton").on("click", function(){
   console.log("scrollButton")
-  currentDay=new Date()
+  currentDay=lastdataDay || new Date()
   daysDisplay.remove()
   daysDisplay = createNCircle(chronos,inR,outR,gapRatio,getNdaysDataUpto(currentDay, numDays),numDays)
 })
@@ -404,15 +404,20 @@ var daysDisplay
 var numDays
 var csvFile = "/data/sleep-export.csv"
 d3.text(csvFile, function(error, text){
+    if (error) {
+        console.log('error reading sleep data file.'); throw error
+    };
     allnapsdata=parseSleepAsAndroidExportFile(text)
     console.log("AllNapsData")
     console.log(allnapsdata)
     alldaysdata=groupByDate(allnapsdata)
     alldaysdata=colorMyDays(alldaysdata)
-    currentDay = new Date()
+    //max key code derived from https://stackoverflow.com/a/27376421
+    lastdataDay = Object.keys(alldaysdata)
+                    .reduce(function(a, b){ return alldaysdata[a].date > alldaysdata[b].date ? a : b });
+    currentDay = lastdataDay || new Date()
     createCircle(chronos,inR,outR,daydataticks)
     numDays = 14
-    //daysDisplay = create7Circle(chronos,inR,outR,gapRatio, weekdata)
     daysDisplay = createNCircle(chronos,inR,outR,gapRatio,getNdaysDataUpto(currentDay, numDays),numDays)
 
   });
