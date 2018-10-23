@@ -402,7 +402,7 @@ var alldaysdata
 var currentDay
 var daysDisplay
 var numDays
-var csvFile = "/data/sleep-export.csv"
+var csvFile = "data/sleep-export.csv"
 d3.text(csvFile, function(error, text){
     if (error) {
         console.log('error reading sleep data file.'); throw error
